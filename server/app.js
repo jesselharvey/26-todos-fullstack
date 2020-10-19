@@ -15,7 +15,7 @@ const knex = require("knex")({
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-const todoList = []
+let todoList = []
 // const items = {
 //   {
 //     id: 1,
@@ -29,13 +29,36 @@ const todoList = []
 // }
 
 app.get("/api/:id/todos", async (req, res) => {
+  const { id } = req.params
   // knex.raw('select * from todos').then((resp) => {
-  const todos = await knex.raw("select * from todos")
-  const todo_rows = todos.rows
-  res.json(todo_rows)
+  // const todos = await knex.raw(`SELECT * FROM todos WHERE user_id=${req.params.id}`)
+  const todos = await knex.raw(`SELECT * FROM todos`)
+  // .then((item) => {
+  // console.log(item.rows)
+  // return item.rows
+  // const todo_rows = todos.rows
+  // })
+  res.json(todos.rows)
+
+  // for (let i = 0; i < todo_rows.length; i++) {
+  // console.log(todo_rows)
+  // res.json(todo_rows)
+  // res.json({
+  //   id: todo_rows.id,
+  //   content: todo_rows.cont,
+  //   status: todo_rows.status,
+  // })
+  // }
   // })
   // console.log()
 })
+
+// lets me get the users v v v
+// app.get("/api/users", async (req, res) => {
+//   const users = await knex.raw(`SELECT * FROM users`)
+//   const user_rows = users.rows
+//   res.json(user_rows)
+// })
 
 app.post("/api/:id/todos", (req, res) => {
   const { id } = req.params
@@ -46,6 +69,7 @@ app.post("/api/:id/todos", (req, res) => {
       id,
     ])
     .then((result) => {
+      // console.log(result.rows)
       res.json(result.rows)
     })
   // const { cont } = req.body
@@ -66,12 +90,25 @@ app.post("/api/:id", (req, res) => {
   res.json()
 })
 
-// app.delete("/api/:id/todos", (req, res) => {
-//   const {id} = req.params
-//   if (req.body.user_id === id) {
-//     knex.raw(`DELETE FROM todos WHERE `)
-//   }
-// })
+app.delete("/api/:id/todos", (req, res) => {
+  // const { id } = req.params
+  knex.raw(`DELETE FROM todos WHERE id=?`, [req.body.id]).then((result) => {
+    res.json(result.rows)
+  })
+})
+
+app.patch("/api/:id/todos", (req, res) => {
+  // const { id } = req.params
+  knex
+    .raw(`UPDATE todos SET cont=?, status=? WHERE id=?`, [
+      req.body.content,
+      req.body.status,
+      req.body.id,
+    ])
+    .then((result) => {
+      res.json(result.rows)
+    })
+})
 
 // app.patch("/api/todo/:id", (req, res) => {
 //   if (req.body.id === item.id) {
