@@ -28,17 +28,22 @@ let todoList = []
 
 // }
 
-app.get("/api/:id/todos", async (req, res) => {
+app.get("/api/:id/todos", (req, res) => {
   const { id } = req.params
   // knex.raw('select * from todos').then((resp) => {
   // const todos = await knex.raw(`SELECT * FROM todos WHERE user_id=${req.params.id}`)
-  const todos = await knex.raw(`SELECT * FROM todos`)
+  knex
+  .raw(`SELECT * FROM todos`)
+  .then((result) => {
+    console.log(result.rows)
+    res.json(result.rows)
+  })
   // .then((item) => {
   // console.log(item.rows)
   // return item.rows
   // const todo_rows = todos.rows
   // })
-  res.json(todos.rows)
+  // res.json(todos.rows)
 
   // for (let i = 0; i < todo_rows.length; i++) {
   // console.log(todo_rows)
@@ -90,9 +95,9 @@ app.post("/api/:id", (req, res) => {
   res.json()
 })
 
-app.delete("/api/:id/todos", (req, res) => {
+app.delete("/api/todos/:id", (req, res) => {
   // const { id } = req.params
-  knex.raw(`DELETE FROM todos WHERE id=?`, [req.body.id]).then((result) => {
+  knex.raw(`DELETE FROM todos WHERE id=?`, [req.params.id]).then((result) => {
     res.json(result.rows)
   })
 })
