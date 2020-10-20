@@ -28,12 +28,12 @@ let todoList = []
 
 // }
 
-app.get("/api/:id/todos", (req, res) => {
+app.get("/api/todos", (req, res) => {
   const { id } = req.params
   // knex.raw('select * from todos').then((resp) => {
   // const todos = await knex.raw(`SELECT * FROM todos WHERE user_id=${req.params.id}`)
   knex
-  .raw(`SELECT * FROM todos`)
+  .raw(`SELECT * FROM todos;`)
   .then((result) => {
     console.log(result.rows)
     res.json(result.rows)
@@ -65,13 +65,13 @@ app.get("/api/:id/todos", (req, res) => {
 //   res.json(user_rows)
 // })
 
-app.post("/api/:id/todos", (req, res) => {
-  const { id } = req.params
+app.post("/api/todos", (req, res) => {
+  // const { id } = req.params
   knex
-    .raw(`INSERT INTO todos (cont, status, user_id) VALUES (?, ?, ?)`, [
+    .raw(`INSERT INTO todos (cont, status, user_id) VALUES (?, ?, ?);`, [
       req.body.content,
-      req.body.status,
-      id,
+      'active',
+      1,
     ])
     .then((result) => {
       // console.log(result.rows)
@@ -79,21 +79,21 @@ app.post("/api/:id/todos", (req, res) => {
     })
   // const { cont } = req.body
   // console.log(req.body)
-  res.json()
+  // res.json()
 })
 
-app.post("/api/:id", (req, res) => {
-  // const { id } = req.params
-  knex
-    .raw(`INSERT INTO users (email) VALUES (?)`, [
-      // id,
-      req.body.email,
-    ])
-    .then((result) => {
-      res.json(result.rows)
-    })
-  res.json()
-})
+// app.post("/api/:id", (req, res) => {
+//   // const { id } = req.params
+//   knex
+//     .raw(`INSERT INTO users (email) VALUES (?)`, [
+//       // id,
+//       req.body.email,
+//     ])
+//     .then((result) => {
+//       res.json(result.rows)
+//     })
+//   res.json()
+// })
 
 app.delete("/api/todos/:id", (req, res) => {
   // const { id } = req.params
@@ -102,7 +102,7 @@ app.delete("/api/todos/:id", (req, res) => {
   })
 })
 
-app.patch("/api/:id/todos", (req, res) => {
+app.patch("/api/todos:id", (req, res) => {
   // const { id } = req.params
   knex
     .raw(`UPDATE todos SET cont=?, status=? WHERE id=?`, [

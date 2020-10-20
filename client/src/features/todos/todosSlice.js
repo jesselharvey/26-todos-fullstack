@@ -11,6 +11,11 @@ export const todosSlice = createSlice({
       state.todosList = action.payload
       console.log(state.todosList)
     },
+
+    addTodoFunct: (state, action) => {
+      state.todosList.push(action.payload)
+    },
+
     deleteTodoFunct: (state, action) => {
       state.todosList = state.todosList.filter((todo) =>{
         return todo.id !== action.payload.id
@@ -21,16 +26,23 @@ export const todosSlice = createSlice({
 
 // console.log(initialState)
 
-const { asynchFetchTodos, deleteTodoFunct } = todosSlice.actions
+const { asynchFetchTodos, } = todosSlice.actions
 
 export const fetchTodos = () => (dispatch) => {
-  axios.get("/api/:id/todos").then((resp) => {
+  axios.get("/api/todos").then((resp) => {
     const todos = resp.data
     // for (let i = 0; i < todos.length; i++) {
     console.log(todos)
     dispatch(asynchFetchTodos(todos))
     // }
     // console.log(todosList)
+  })
+}
+
+export const addTodo = (text) => (dispatch) => {
+  axios.post("api/todos", {content: text}).then((resp) => {
+    // console.log(text)
+    dispatch(fetchTodos())
   })
 }
 
